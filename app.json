@@ -25,6 +25,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "This app uses photos to mark locations. Do you give permission?"
+        }
+      ]
+    ]
   }
 }
