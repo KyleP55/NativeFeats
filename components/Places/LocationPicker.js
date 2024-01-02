@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, Image } from 'react-native';
 import { getCurrentPositionAsync, useForegroundPermissions, PermissionStatus } from 'expo-location';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native';
 
 import OutlinedButton from "../ui/OutlinedButton";
 import { Colors } from "../../const/colors";
@@ -15,6 +15,7 @@ function LocationPicker({ onLocation }) {
     //Navigation
     const navigation = useNavigation();
     const route = useRoute();
+    const isFocused = useIsFocused();
 
     // Check/Get Location Permissions
     async function locationPermissions() {
@@ -37,11 +38,14 @@ function LocationPicker({ onLocation }) {
     // Button Handlers
     async function getLocationHandler() {
         const hasPermission = await locationPermissions();
-        const location = await getCurrentPositionAsync();
-        setMapLocation({
-            lat: location.coords.latitude,
-            lng: location.coords.longitude
-        });
+        if (hasPermission) {
+            const location = await getCurrentPositionAsync();
+            setMapLocation({
+                lat: location.coords.latitude,
+                lng: location.coords.longitude
+            });
+            onLocation(mapLocation);
+        }
     };
 
     function useMapHandler() {
@@ -49,28 +53,21 @@ function LocationPicker({ onLocation }) {
     };
 
     // Get map image from map screen
-    const mapScreenLocation = route.params && { lat: route.params.lat, lng: route.params.lng };
-
     useEffect(() => {
-        if (mapScreenLocation) {
+        if (isFocused && route.params) {
             setMapLocation({
-                lat: mapScreenLocation.lat,
-                lng: mapScreenLocation.lng
+                lat: route.params.pickedLat,
+                lng: route.params.pickedLng
             });
+            onLocation(mapLocation);
         }
-    }, [mapScreenLocation]);
+    }, [route, isFocused]);
 
-    // Load map image if exists
-    let mapPreview = <Text>No location set yet!</Text>
-
-    if (mapLocation) {
-        mapPreview = <Image style={s.image} source={{ uri: getMapPreview(mapLocation.lat, mapLocation.lng) }} />
-    }
-
+    //
 
     return <View>
         <View style={s.mapPreview}>
-            {mapPreview}
+            {mapLocation ? <Image style={s.image} source={{ uri: getMapPreview(mapLocation.lat, mapLocation.lng) }} /> : <Text>No location set yet!</Text>}
         </View>
         <View style={s.buttonsContainer}>
             <OutlinedButton icon="location" onPress={getLocationHandler}>Locate User</OutlinedButton>

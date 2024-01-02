@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Text, View, StyleSheet, ScrollView, TextInput } from "react-native";
+import { useCallback, useState } from "react";
+import { Text, View, StyleSheet, ScrollView, TextInput, Alert } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 import { Colors } from "../../const/colors";
 import ImagePicker from "./ImagePicker";
@@ -11,20 +12,39 @@ function PlaceForm() {
     const [image, setImage] = useState();
     const [location, setLocation] = useState();
 
+    const isFocused = useIsFocused();
+
     // Handlers for components
     function changeTitleHandler(txt) {
-        setTitle(txt);
+        if (txt) setTitle(txt);
     }
 
     function imageHandler(uri) {
-        setImage(uri);
+        if (uri) setImage(uri);
     }
 
     function locationHandler(location) {
-        setLocation(location);
+        if (location) setLocation(location);
     }
 
-    function savePlaceHandler() { }
+    const savePlaceHandler = useCallback(() => {
+        // Check all fields
+        if (!title) {
+            Alert.alert("Title empty!", "Please enter in a title.");
+            return;
+        }
+        if (!image) {
+            Alert.alert("No picture taken!", "Please add a picture.");
+            return;
+        }
+        if (!location) {
+            Alert.alert("No location!", "Please add a location.");
+            console.log("location? " + location)
+            return;
+        }
+
+        console.log('added')
+    }, [isFocused, changeTitleHandler, imageHandler, locationHandler]);
 
     return (
         <ScrollView style={s.container}>
