@@ -5,7 +5,7 @@ import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native'
 
 import OutlinedButton from "../ui/OutlinedButton";
 import { Colors } from "../../const/colors";
-import { getMapPreview } from "../../util/location";
+import { getMapPreview, getAddress } from "../../util/location";
 
 function LocationPicker({ onLocation }) {
     //State
@@ -36,6 +36,7 @@ function LocationPicker({ onLocation }) {
     }
 
     // Button Handlers
+    // Get location
     async function getLocationHandler() {
         const hasPermission = await locationPermissions();
         if (hasPermission) {
@@ -44,26 +45,34 @@ function LocationPicker({ onLocation }) {
                 lat: location.coords.latitude,
                 lng: location.coords.longitude
             });
-            onLocation(mapLocation);
         }
     };
 
+    // Get map image from map screen
     function useMapHandler() {
         navigation.navigate('Map');
     };
 
-    // Get map image from map screen
     useEffect(() => {
         if (isFocused && route.params) {
             setMapLocation({
                 lat: route.params.pickedLat,
                 lng: route.params.pickedLng
             });
-            onLocation(mapLocation);
         }
     }, [route, isFocused]);
 
-    //
+    // On location update PlaceForm
+    useEffect(() => {
+        if (mapLocation) {
+            async function handleLocation() {
+                const addressText = await getAddress(mapLocation.lat, mapLocation.lng);
+                onLocation({ ...mapLocation, address: addressText });
+            }
+
+            handleLocation();
+        }
+    }, [mapLocation]);
 
     return <View>
         <View style={s.mapPreview}>

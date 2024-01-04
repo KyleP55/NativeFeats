@@ -41,7 +41,10 @@ function ImagePicker({ onImage }) {
         if (imageTaken) {
             setImage(imageTaken.assets[0].uri);
             onImage(imageTaken.assets[0].uri);
+            return;
         }
+
+        Alert.alert("An Error has Accured", "Picture not taken, please try again.");
     }
 
     let imagePreview = <Text style={s.text}>No image taken yet</Text>
