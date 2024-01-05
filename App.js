@@ -8,10 +8,35 @@ import Map from './pages/Map.js';
 
 import IconButton from './components/ui/IconButton';
 import { Colors } from './const/colors.js';
+import { useEffect, useState } from 'react';
+import { initDb } from './util/database.js';
+import AppLoading from 'expo-app-loading';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [loading, setLoading] = useState(true);
+
+
+  //Check for DB/Create DB
+  useEffect(() => {
+    async function init() {
+      try {
+        await initDb();
+      } catch (err) {
+        console.log(err);
+        return;
+      }
+      setLoading(true);
+    }
+
+    init();
+  }, []);
+
+  if (!loading) {
+    return <AppLoading />
+  }
+
   return (
     <>
       <StatusBar style='dark' />

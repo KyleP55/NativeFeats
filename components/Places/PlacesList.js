@@ -10,12 +10,15 @@ function PlacesList({ places }) {
             <Text style={s.text}>Start adding some!</Text>
         </View>
     }
-    return (
+
+    return (<>
         <FlatList
             data={places}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => { <PlaceItem place={item} /> }}
+            renderItem={({ item }) => <PlaceItem place={item} />}
+            style={s.list}
         />
+    </>
     );
 }
 
@@ -37,4 +40,7 @@ const s = StyleSheet.create({
         textAlign: 'center',
         color: Colors.primary200,
     },
+    list: {
+        margin: 14,
+    }
 });
