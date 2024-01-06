@@ -33,6 +33,7 @@ export default function App() {
     init();
   }, []);
 
+  // Loading Screen
   if (!loading) {
     return <AppLoading />
   }
