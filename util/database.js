@@ -38,7 +38,6 @@ export function insertPlace(place) {
                 VALUES (?, ?, ?, ?, ?)`,
                 [place.title, place.imageUri, place.location.address, place.location.lat, place.location.lng],
                 (_, result) => {
-                    console.log(result);
                     res(result);
                 },
                 (_, err) => {
@@ -51,7 +50,7 @@ export function insertPlace(place) {
     return promise;
 }
 
-// FETCH
+// FETCH All
 export function fetchPlaces() {
     const promise = new Promise((res, rej) => {
         database.transaction((tx) => {
@@ -78,6 +77,73 @@ export function fetchPlaces() {
                 },
                 (_, err) => {
                     rej(err);
+                }
+            )
+        });
+    });
+
+    return promise;
+}
+
+// FETCH one
+export function fetchOnePlace(id) {
+    const promise = new Promise((res, rej) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT * FROM places
+                WHERE id = ?`,
+                [id],
+                (_, result) => {
+                    const i = result.rows._array[0]
+                    const place = new Place(
+                        i.title,
+                        i.image,
+                        {
+                            address: i.address,
+                            lat: i.lat,
+                            lng: i.lng,
+                        },
+                        i.id
+                    );
+
+                    res(place);
+                },
+                (_, err) => {
+                    rej(err);
+                }
+            );
+        });
+    });
+
+    return promise;
+}
+
+// UPDATE
+export function updatePlace(id) {
+    const promise = new Promise((res, rej) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                ``
+            )
+        });
+    });
+
+    return promise;
+}
+
+// DELETE
+export function deletePlace(id) {
+    const promise = new Promise((res, rej) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `DELETE * FROM places
+                WHERE id = ?`,
+                [id],
+                (_, result) => {
+                    res(result);
+                },
+                (_, err) => {
+                    rej(err)
                 }
             )
         });

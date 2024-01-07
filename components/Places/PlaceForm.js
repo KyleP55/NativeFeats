@@ -12,6 +12,7 @@ function PlaceForm({ onCreate }) {
     const [image, setImage] = useState();
     const [location, setLocation] = useState();
 
+    // Update Handlers
     function imageHandler(uri) {
         if (uri) setImage(uri);
     }

@@ -4,11 +4,12 @@ import PlacesList from "../components/Places/PlacesList";
 import { fetchPlaces } from "../util/database";
 
 
-function AllPlaces() {
+function AllPlaces({ navigation }) {
     const [places, setPlaces] = useState([]);
 
     const isFocus = useIsFocused();
 
+    // Fetch places from DB
     useEffect(() => {
         async function loadPlaces() {
             const places = await fetchPlaces();
@@ -18,7 +19,12 @@ function AllPlaces() {
         loadPlaces();
     }, [isFocus]);
 
-    return <PlacesList places={places} />
+    // pick place
+    function onSelectHandler(id) {
+        navigation.navigate("PlaceDetails", { id: id });
+    }
+
+    return <PlacesList places={places} onSelect={onSelectHandler} />
 }
 
 export default AllPlaces;

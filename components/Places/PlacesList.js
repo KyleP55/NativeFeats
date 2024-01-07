@@ -3,7 +3,9 @@ import PlaceItem from "./PlaceItem";
 import { Colors } from "../../const/colors";
 
 
-function PlacesList({ places }) {
+function PlacesList({ places, onSelect }) {
+
+    // Check if places in list
     if (!places || places.length === 0) {
         return <View style={s.container}>
             <Text style={s.title}>No places found!</Text>
@@ -11,11 +13,12 @@ function PlacesList({ places }) {
         </View>
     }
 
+
     return (<>
         <FlatList
             data={places}
             keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <PlaceItem place={item} />}
+            renderItem={({ item }) => <PlaceItem place={item} onSelect={onSelect} />}
             style={s.list}
         />
     </>
