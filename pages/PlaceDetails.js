@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 
 import { deletePlace, fetchOnePlace } from "../util/database";
 import AppLoading from "expo-app-loading";
-import LocationPicker from "../components/Places/LocationPicker";
 import OutlinedButton from "../components/ui/OutlinedButton";
 import { Colors } from "../const/colors";
 import Button from "../components/ui/Button";
@@ -33,12 +32,15 @@ function PlaceDetails({ route, navigation }) {
         getData();
     }, []);
 
-    // loading screen
-    if (loading) return <AppLoading />
 
     // Show on map
     function showOnMapHandler(lat, lng) {
         navigation.navigate("Map", { lat: lat, lng: lng });
+    }
+
+    // Edit Map Handler
+    function editHandler() {
+
     }
 
     // Delete Handler
@@ -48,6 +50,9 @@ function PlaceDetails({ route, navigation }) {
         navigation.navigate("AllPlaces");
     }
 
+    // loading screen
+    if (loading) return <AppLoading />
+
     // JSX
     return <ScrollView >
         <Image style={s.image} source={{ uri: place.imageUri }} />
@@ -55,8 +60,9 @@ function PlaceDetails({ route, navigation }) {
             <View style={s.addressContainer}>
                 <Text style={s.address}>{place.location.address}</Text>
             </View>
-            <OutlinedButton icon="map" onPress={showOnMapHandler}>View on Map</OutlinedButton>
+            <OutlinedButton icon="map" onPress={showOnMapHandler.bind(this, place.location.lat, place.location.lng)}>View on Map</OutlinedButton>
         </View>
+        <Button onPress={editHandler.bind(this, place.id)}>Edit</Button>
         <Button onPress={deleteHandler.bind(this, place.id)}>Delete Place</Button>
 
     </ScrollView>

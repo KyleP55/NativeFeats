@@ -1,41 +1,43 @@
 import MapView, { Marker } from "react-native-maps";
-import { Alert, StyleSheet } from "react-native";
+import { Alert, StyleSheet, Text } from "react-native";
 import { useCallback, useLayoutEffect, useState } from "react";
 import IconButton from "../components/ui/IconButton";
 
 function Map({ route, navigation }) {
-    const [location, setLocation] = useState();
-    const [latlng, setLatlng] = useState();
+    const initailLocation = route.params && { lat: route.params.lat, lng: route.params.lng };
+
+    const [location, setLocation] = useState(initailLocation);
+
 
     // Setting header options
     useLayoutEffect(() => {
         // Check if static map view or map picker view
-        if (route.params && !latlng) {
-            setLatlng({ lat: route.params.lat, lng: route.params.lng });
-        } else {
-            navigation.setOptions({
-                headerRight: ({ tintColor }) => <IconButton icon="save" size={24} color={tintColor} onPress={saveLocationHandler} />
-            });
-        }
+        if (initailLocation) return;
+
+        navigation.setOptions({
+            headerRight: ({ tintColor }) => <IconButton icon="save" size={24} color={tintColor} onPress={saveLocationHandler} />
+        });
     }, [navigation, selectLocationHandler]);
 
 
     const region = {
-        latitude: 37.78,
-        longitude: -122.43,
+        latitude: initailLocation ? initailLocation.lat : 37.78,
+        longitude: initailLocation ? initailLocation.lng : -122.43,
         latitudeDelta: 0.0922,
         longitudeDelta: 0.0421
     };
 
     // map pressed handler
     function selectLocationHandler(event) {
-        const lat = event.nativeEvent.coordinate.latitude;
-        const lng = event.nativeEvent.coordinate.longitude;
+        if (!initailLocation) {
+            const lat = event.nativeEvent.coordinate.latitude;
+            const lng = event.nativeEvent.coordinate.longitude;
 
-        setLocation({
-            lat: lat,
-            lng: lng
-        });
+            setLocation({
+                lat: lat,
+                lng: lng
+            });
+        }
     }
 
     // Save Location
