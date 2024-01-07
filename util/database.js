@@ -136,13 +136,15 @@ export function deletePlace(id) {
     const promise = new Promise((res, rej) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `DELETE * FROM places
+                `DELETE FROM places 
                 WHERE id = ?`,
                 [id],
                 (_, result) => {
+                    console.log(result)
                     res(result);
                 },
                 (_, err) => {
+                    console.log(err)
                     rej(err)
                 }
             )

@@ -3,14 +3,20 @@ import { Alert, StyleSheet } from "react-native";
 import { useCallback, useLayoutEffect, useState } from "react";
 import IconButton from "../components/ui/IconButton";
 
-function Map({ navigation }) {
+function Map({ route, navigation }) {
     const [location, setLocation] = useState();
+    const [latlng, setLatlng] = useState();
 
     // Setting header options
     useLayoutEffect(() => {
-        navigation.setOptions({
-            headerRight: ({ tintColor }) => <IconButton icon="save" size={24} color={tintColor} onPress={saveLocationHandler} />
-        });
+        // Check if static map view or map picker view
+        if (route.params && !latlng) {
+            setLatlng({ lat: route.params.lat, lng: route.params.lng });
+        } else {
+            navigation.setOptions({
+                headerRight: ({ tintColor }) => <IconButton icon="save" size={24} color={tintColor} onPress={saveLocationHandler} />
+            });
+        }
     }, [navigation, selectLocationHandler]);
 
 
