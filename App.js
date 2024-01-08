@@ -6,6 +6,7 @@ import AllPlaces from './pages/AllPlaces';
 import AddPlace from './pages/AddPlace';
 import Map from './pages/Map.js';
 import PlaceDetails from './pages/PlaceDetails.js';
+import EditPlace from './pages/EditPlace.js';
 
 import IconButton from './components/ui/IconButton';
 import { Colors } from './const/colors.js';
@@ -82,6 +83,11 @@ export default function App() {
           <Stack.Screen
             name={"PlaceDetails"}
             component={PlaceDetails}
+          />
+
+          <Stack.Screen
+            name={"EditPlace"}
+            component={EditPlace}
           />
         </Stack.Navigator>
       </NavigationContainer>

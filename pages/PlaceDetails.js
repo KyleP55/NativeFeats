@@ -1,5 +1,4 @@
 import { Text, View, StyleSheet, Image, ScrollView } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 
 import { deletePlace, fetchOnePlace } from "../util/database";
@@ -10,8 +9,6 @@ import Button from "../components/ui/Button";
 
 
 function PlaceDetails({ route, navigation }) {
-    const isFocus = useIsFocused();
-
     const [loading, setLoading] = useState(true);
     const [place, setPlace] = useState();
 
@@ -40,7 +37,7 @@ function PlaceDetails({ route, navigation }) {
 
     // Edit Map Handler
     function editHandler() {
-
+        navigation.navigate("EditPlace", { id: place.id })
     }
 
     // Delete Handler

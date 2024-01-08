@@ -27,7 +27,7 @@ function Map({ route, navigation }) {
         longitudeDelta: 0.0421
     };
 
-    // map pressed handler
+    // map clicked handler
     function selectLocationHandler(event) {
         if (!initailLocation) {
             const lat = event.nativeEvent.coordinate.latitude;

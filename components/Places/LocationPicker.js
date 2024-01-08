@@ -7,7 +7,7 @@ import OutlinedButton from "../ui/OutlinedButton";
 import { Colors } from "../../const/colors";
 import { getMapPreview, getAddress } from "../../util/location";
 
-function LocationPicker({ onLocation }) {
+function LocationPicker({ onLocation, oldLocation }) {
     //State
     const [locationPermissionsInformation, requestPermission] = useForegroundPermissions();
     const [mapLocation, setMapLocation] = useState();
@@ -16,6 +16,14 @@ function LocationPicker({ onLocation }) {
     const navigation = useNavigation();
     const route = useRoute();
     const isFocused = useIsFocused();
+
+    // Check if editing or new location
+    useEffect(() => {
+        if (oldLocation) {
+            //setMapLocation({ lat: oldLocation.lat, lng: oldLocation.lng });
+            console.log("set to " + JSON.stringify(oldLocation))
+        }
+    }, []);
 
     // Check/Get Location Permissions
     async function locationPermissions() {
@@ -65,6 +73,7 @@ function LocationPicker({ onLocation }) {
     // On location update PlaceForm
     useEffect(() => {
         if (mapLocation) {
+            console.log("Map location " + JSON.stringify(mapLocation))
             async function handleLocation() {
                 const addressText = await getAddress(mapLocation.lat, mapLocation.lng);
                 onLocation({ ...mapLocation, address: addressText });
